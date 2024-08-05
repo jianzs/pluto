@@ -81,7 +81,7 @@ jobs:
         id: check-if-need-publish
         working-directory: ${{ env.workingDirectory }}
         run: |
-          current_version=$(poetry version | awk '{print $2}')
+          current_version=$(python3 -m poetry version | awk '{print $2}')
           latest_version=${{ steps.get-latest-version.outputs.latestVersion }}
 
           if [[ "$current_version" == "$latest_version" ]]; then
@@ -95,17 +95,17 @@ jobs:
       - name: Update Poetry configuration
         if: steps.check-if-need-publish.outputs.needPublish == 'true'
         working-directory: ${{ env.workingDirectory }}
-        run: poetry config virtualenvs.create false
+        run: python3 -m poetry config virtualenvs.create false
 
       - name: Install dependencies
         if: steps.check-if-need-publish.outputs.needPublish == 'true'
         working-directory: ${{ env.workingDirectory }}
-        run: poetry install --sync --no-interaction
+        run: python3 -m poetry install --sync --no-interaction
 
       - name: Package project
         if: steps.check-if-need-publish.outputs.needPublish == 'true'
         working-directory: ${{ env.workingDirectory }}
-        run: poetry build
+        run: python3 -m poetry build
 
       - name: Publish package distributions to PyPI
         if: steps.check-if-need-publish.outputs.needPublish == 'true'
