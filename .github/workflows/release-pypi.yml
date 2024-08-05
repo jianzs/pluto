@@ -39,8 +39,7 @@ jobs:
 
       - name: Install Poetry
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install poetry
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 
       - name: Set working directory
         id: set-working-directory
@@ -81,7 +80,7 @@ jobs:
         id: check-if-need-publish
         working-directory: ${{ env.workingDirectory }}
         run: |
-          current_version=$(python3 -m poetry version | awk '{print $2}')
+          current_version=$(poetry version | awk '{print $2}')
           latest_version=${{ steps.get-latest-version.outputs.latestVersion }}
 
           if [[ "$current_version" == "$latest_version" ]]; then
@@ -95,17 +94,17 @@ jobs:
       - name: Update Poetry configuration
         if: steps.check-if-need-publish.outputs.needPublish == 'true'
         working-directory: ${{ env.workingDirectory }}
-        run: python3 -m poetry config virtualenvs.create false
+        run: poetry config virtualenvs.create false
 
       - name: Install dependencies
         if: steps.check-if-need-publish.outputs.needPublish == 'true'
         working-directory: ${{ env.workingDirectory }}
-        run: python3 -m poetry install --sync --no-interaction
+        run: poetry install --sync --no-interaction
 
       - name: Package project
         if: steps.check-if-need-publish.outputs.needPublish == 'true'
         working-directory: ${{ env.workingDirectory }}
-        run: python3 -m poetry build
+        run: poetry build
 
       - name: Publish package distributions to PyPI
         if: steps.check-if-need-publish.outputs.needPublish == 'true'
