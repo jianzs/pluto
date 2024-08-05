@@ -24,7 +24,7 @@ jobs:
       name: testpypi
       url: https://test.pypi.org/project/${{ matrix.package-name }}/
     env:
-      PACKAGE_DIRS: "pluto-base:packages/pluto-base,pluto-client:packages/pluto-client"
+      PACKAGE_DIRS: "pluto-base:packages/base-py,pluto-client:packages/pluto-py"
     permissions:
       id-token: write
 
